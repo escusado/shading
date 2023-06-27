@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+/* nabla-regular - latin */
+@font-face {
+  font-family: "Nabla";
+  font-style: normal;
+  font-weight: 400;
+  src: local(""), url("./nabla.ttf") format("truetype");
+}
+
+@font-palette-values --blue {
+  font-family: Nabla;
+  base-palette: 2;
+}
+
+html,
+body,
+#__next,
+.main {
+  overflow: hidden;
+  position: fixed;
+}
+
+html {
+  user-select: none;
+  background-color: #008080;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+html,
+body,
+#root,
+.main,
+canvas,
+#__next {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+.closed-eye {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  width: 100px;
+  pointer-events: none;
+}
+
+canvas {
+  opacity: 0;
+  touch-action: none;
+  animation: fadein 1s ease 0.5s forwards;
+}
+
+.content {
+  animation: 3s ease 0s normal forwards 1 fadein;
+  position: absolute;
+  bottom: 38px;
+  right: 150px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.gh-icon {
+  position: absolute;
+  width: 24px;
+  top: 8px;
+  right: -140px;
+}
+
+.title-wrapper {
+  position: relative;
+}
+
+.content .title {
+  font-family: "Nabla";
+  text-shadow: #33333366 1px 0 1px;
+  font-size: 25px;
+  position: absolute;
+}
+
+.top {
+  transition: opacity;
+  transition: 1s;
+  font-palette: --blue;
+}
+
+.top:hover {
+  opacity: 0;
+}
+
+.shadow {
+  bottom: 0;
+  right: -100px;
+  width: 500px;
+  height: 50px;
+  background: linear-gradient(
+    170deg,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  position: absolute;
+  pointer-events: none;
+}
+
+.terrain-heightmap-canvas,
+.terrain-texture-canvas {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  z-index: 1;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  transform: scale(4);
+  image-rendering: pixelated;
+
+  /* hide for production  */
+  display: none;
+}
+
+.terrain-heightmap-canvas {
+  right: 180px;
+}
+
+.player-position {
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  z-index: 2;
+  background-color: red;
+  width: 2px;
+  height: 2px;
+}
+
+.item-fadeout {
+  animation: fadeout 1s linear forwards;
+}
+
+.item-fadein {
+  opacity: 1;
+  animation: fadein 12s linear forwards;
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  66% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
