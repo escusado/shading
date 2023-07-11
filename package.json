@@ -19,6 +19,7 @@
     "@types/chroma-js": "^2.1.4",
     "98.css": "^0.1.18",
     "chroma-js": "^2.4.2",
+    "facefilter": "^3.3.0",
     "next": "^13.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
