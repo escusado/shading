@@ -8,8 +8,8 @@ import { Canvas } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { NoiseFunction2D } from "simplex-noise";
 
-import { OrbitControls } from "@react-three/drei";
 import { DepthOfField, EffectComposer } from "@react-three/postprocessing";
+import CameraController from "./actors/camera-controller";
 import Stage from "./actors/stage";
 
 //make z up same as in blender
@@ -17,12 +17,16 @@ Object3D.DefaultUp.set(0, 0, 1);
 
 interface AppState {
   isAppInFocus: boolean;
+  hasGameStarted: boolean;
+  isGameCameraInFinalPosition: boolean;
   floorPointerPosition: Vector3;
 }
 
 export const appStateStore = createStore(
   { name: "appState" },
   withProps<AppState>({
+    isGameCameraInFinalPosition: false,
+    hasGameStarted: true,
     isAppInFocus: true,
     floorPointerPosition: new Vector3(0, 0, 0),
   })
@@ -31,6 +35,9 @@ export const appStateStore = createStore(
 export type TerrainCanvasProps = {
   noiseGenerator: NoiseFunction2D;
 };
+
+export const startCameraPosition = new Vector3(-0.5, -10, 100); // start high and at the correct rotation
+export const endCameraPosition = new Vector3(0.1, -5, 15);
 
 const App = () => {
   return (
@@ -43,11 +50,17 @@ const App = () => {
         onMouseEnter={() => appStateStore.update(setProp("isAppInFocus", true))}
         shadows
         onCreated={(state) => (state.gl.localClippingEnabled = true)}
+        camera={{
+          position: startCameraPosition,
+          // near: 30,
+          // far: 55,
+          // fov: 12,
+        }}
       >
         <color attach="background" args={["#EE8080"]} />
 
         <ambientLight intensity={0.5} />
-
+        <CameraController />
         <directionalLight
           position={[5, -5, 10]}
           shadow-mapSize={[256, 256]}
@@ -78,14 +91,14 @@ const App = () => {
         </EffectComposer>
 
         {/* Controls */}
-        <OrbitControls
+        {/* <OrbitControls
           autoRotate
           autoRotateSpeed={0.1}
           enablePan={false}
           enableZoom={false}
           minPolarAngle={Math.PI / 4}
           maxPolarAngle={Math.PI / 4}
-        />
+        /> */}
       </Canvas>
     </>
   );
