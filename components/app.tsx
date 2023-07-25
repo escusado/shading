@@ -8,10 +8,9 @@ import { Canvas } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 
 import { DepthOfField, EffectComposer } from "@react-three/postprocessing";
-import { useEffect } from "react";
 import CameraController from "./actors/camera-controller";
 import Stage from "./actors/stage";
-import Game from "./lib/game";
+import GameUi from "./ui/game-ui";
 
 //make z up same as in blender
 Object3D.DefaultUp.set(0, 0, 1);
@@ -37,13 +36,9 @@ export const startCameraPosition = new Vector3(-0.5, -10, 100); // start high an
 export const endCameraPosition = new Vector3(0.1, -5, 15);
 
 const App = () => {
-  useEffect(() => {
-    //@ts-ignore
-    window.gameEngine = new Game();
-  }, []);
-
   return (
     <>
+      <GameUi />
       <Canvas
         gl={{ antialias: false, powerPreference: "high-performance" }}
         onMouseLeave={() =>
@@ -54,25 +49,39 @@ const App = () => {
         onCreated={(state) => (state.gl.localClippingEnabled = true)}
         camera={{
           position: startCameraPosition,
-          near: 10,
-          far: 90,
-          // fov: 12,
+          // near: 20,
+          far: 60,
+          fov: 100,
         }}
       >
         <color attach="background" args={["#EE8080"]} />
 
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.2} />
         <CameraController />
         <directionalLight
-          position={[5, -5, 10]}
-          shadow-mapSize={[256, 256]}
+          position={[20, -10, 10]}
+          shadow-mapSize={[512, 512]}
           shadow-bias={-0.0001}
           intensity={1}
+          // color="red"
           castShadow
         >
           <orthographicCamera
             attach="shadow-camera"
-            args={[-10, 10, -10, 10]}
+            args={[-50, 50, -50, 50]}
+          />
+        </directionalLight>
+        <directionalLight
+          position={[0, 0, 1]}
+          shadow-mapSize={[512, 512]}
+          // shadow-bias={-0.0001}
+          intensity={0.5}
+          // color="red"
+          castShadow
+        >
+          <orthographicCamera
+            attach="shadow-camera"
+            args={[-50, 50, -50, 50]}
           />
         </directionalLight>
 

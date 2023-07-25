@@ -1,6 +1,17 @@
 // import dynamic from "next/dynamic";
 
 import App from "../components/app";
+import GameEngine from "../components/lib/game-engine";
+
+declare global {
+  interface Window {
+    gameEngine: GameEngine;
+  }
+}
+// gloabl game engine
+if (typeof window !== "undefined") {
+  window.gameEngine = new GameEngine();
+}
 
 export default function Home() {
   return (

@@ -1,32 +1,41 @@
 import { MeshProps, useFrame } from "@react-three/fiber";
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 import { BufferGeometry, Material, Mesh } from "three";
-import GradientFragmentShader from "../shaders/gradient-fragment-shader";
-import VertexShader from "../shaders/vertex-shader";
+import { randFloat } from "three/src/math/MathUtils";
 
 type BoxProps = {
   className?: string;
 };
 
 const Box: FC<BoxProps | MeshProps> = (props) => {
+  const [xRate] = useState(randFloat(0.001, 0.02));
+  const [yRate] = useState(randFloat(0.001, 0.02));
+  const [scale] = useState(randFloat(0.1, 1));
   const meshRef = useRef<
     Mesh<BufferGeometry, Material | Material[]> | undefined
   >();
-  useFrame(
-    () =>
-      meshRef.current &&
-      (meshRef.current.rotation.x = meshRef.current.rotation.y += 0.01)
-  );
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x += xRate;
+      meshRef.current.rotation.y += yRate;
+    }
+  });
   return (
-    // @ts-ignore
-    <mesh {...props} ref={meshRef} castShadow={true} receiveShadow={true}>
+    <mesh
+      {...props}
+      // @ts-ignore
+      ref={meshRef}
+      scale={scale}
+      castShadow={true}
+      receiveShadow={true}
+    >
       <boxGeometry args={[3, 3, 3]} />
-      {/* <meshStandardMaterial color={"orange"} />
-       */}
-      <shaderMaterial
+      <meshStandardMaterial color={"orange"} />
+
+      {/* <shaderMaterial
         fragmentShader={GradientFragmentShader}
         vertexShader={VertexShader}
-      />
+      /> */}
     </mesh>
   );
 };
