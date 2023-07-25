@@ -6,11 +6,12 @@ import { Object3D, Vector3 } from "three";
 import { createStore, setProp, withProps } from "@ngneat/elf";
 import { Canvas } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
-import { NoiseFunction2D } from "simplex-noise";
 
 import { DepthOfField, EffectComposer } from "@react-three/postprocessing";
+import { useEffect } from "react";
 import CameraController from "./actors/camera-controller";
 import Stage from "./actors/stage";
+import Game from "./lib/game";
 
 //make z up same as in blender
 Object3D.DefaultUp.set(0, 0, 1);
@@ -32,14 +33,15 @@ export const appStateStore = createStore(
   })
 );
 
-export type TerrainCanvasProps = {
-  noiseGenerator: NoiseFunction2D;
-};
-
 export const startCameraPosition = new Vector3(-0.5, -10, 100); // start high and at the correct rotation
 export const endCameraPosition = new Vector3(0.1, -5, 15);
 
 const App = () => {
+  useEffect(() => {
+    //@ts-ignore
+    window.gameEngine = new Game();
+  }, []);
+
   return (
     <>
       <Canvas
@@ -52,8 +54,8 @@ const App = () => {
         onCreated={(state) => (state.gl.localClippingEnabled = true)}
         camera={{
           position: startCameraPosition,
-          // near: 30,
-          // far: 55,
+          near: 10,
+          far: 90,
           // fov: 12,
         }}
       >

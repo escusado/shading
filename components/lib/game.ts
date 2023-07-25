@@ -1,12 +1,28 @@
 import { createStore, setProp, withProps } from "@ngneat/elf";
 
-interface Player {
-  id: string;
+enum CardType {
+  Spades,
+  Hearts,
+  Clubs,
+  Diamonds,
 }
+
+type Card = {
+  type: CardType;
+  value: number;
+  hightlight: boolean;
+};
+
+type Player = {
+  id: string;
+  hand: Card[];
+  knocked: boolean;
+};
 
 interface GameState {
   currentTurn: number;
   players: Player[];
+  deck: Card[];
 }
 
 export const gameStateStore = createStore(
@@ -14,6 +30,7 @@ export const gameStateStore = createStore(
   withProps<GameState>({
     currentTurn: 0,
     players: [],
+    deck: [],
   })
 );
 

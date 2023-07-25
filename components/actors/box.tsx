@@ -1,4 +1,4 @@
-import { useFrame } from "@react-three/fiber";
+import { MeshProps, useFrame } from "@react-three/fiber";
 import { FC, useRef } from "react";
 import { BufferGeometry, Material, Mesh } from "three";
 import GradientFragmentShader from "../shaders/gradient-fragment-shader";
@@ -8,7 +8,7 @@ type BoxProps = {
   className?: string;
 };
 
-const Box: FC<BoxProps> = (props) => {
+const Box: FC<BoxProps | MeshProps> = (props) => {
   const meshRef = useRef<
     Mesh<BufferGeometry, Material | Material[]> | undefined
   >();
