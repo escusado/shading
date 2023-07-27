@@ -10,11 +10,12 @@ const GameUi: FC<GameUiProps> = () => {
       <div className="h-30 absolute bottom-40 flex w-full justify-center bg-[rgba(0,0,0,0.5)] p-2">
         <div
           className="inline-block cursor-pointer rounded bg-red-300 p-2 px-4 text-white"
-          onClick={() =>
+          onClick={() => {
             window.gameEngine.setupNewGame({
               playerIds: ["uno", "dos", "tres"],
-            })
-          }
+            });
+            console.log("🍕>>> start");
+          }}
         >
           Start
         </div>

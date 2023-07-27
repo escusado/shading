@@ -9,7 +9,7 @@ import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 
 import { DepthOfField, EffectComposer } from "@react-three/postprocessing";
 import CameraController from "./actors/camera-controller";
-import Stage from "./actors/stage";
+import Game from "./actors/game";
 import GameUi from "./ui/game-ui";
 
 //make z up same as in blender
@@ -86,7 +86,7 @@ const App = () => {
         </directionalLight>
 
         <Physics gravity={[0, 0, 0]}>
-          <Stage />
+          <Game />
           <RigidBody position={[0, 0, 0]} type="fixed">
             <CuboidCollider restitution={0.1} args={[1000, 1000, 1]} />
           </RigidBody>

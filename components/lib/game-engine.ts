@@ -1,74 +1,112 @@
-import { createStore, select, setProp, withProps } from "@ngneat/elf";
-
-enum CardType {
-  Spades,
-  Hearts,
-  Clubs,
-  Diamonds,
-}
-
-type Card = {
-  type: CardType;
-  value: number;
-  hightlight: boolean;
-};
-
-type Player = {
-  id: string;
-  hand: Card[];
-  knocked: boolean;
-};
-
-interface GameState {
-  currentTurn: number;
-  players: Player[];
-  deck: Card[];
-}
-
-export const gameStateStore = createStore(
-  { name: "GameState" },
-  withProps<GameState>({
-    currentTurn: 0,
-    players: [],
-    deck: [],
-  })
-);
+import { setProp, setProps } from "@ngneat/elf";
+import {
+  Card,
+  CardType,
+  emptyCard,
+  gameStateDefaults,
+  gameStateStore,
+  Player,
+} from "../stores/game-state";
 
 interface NewGameProps {
   playerIds: string[];
 }
 
-class GameEngine {
+const randomSort = (_: any, __: any) => 0.5 - Math.random();
+const getNewDeck = () => {
+  console.log("🍕>>> Rolling deck");
+  const deck: Card[] = [];
+  for (let cardType of [
+    CardType.Spades,
+    CardType.Hearts,
+    CardType.Clubs,
+    CardType.Diamonds,
+  ]) {
+    for (let i = 0; i <= 12; i++) {
+      deck.push({
+        type: cardType,
+        value: i,
+        hightlight: false,
+      });
+    }
+  }
+  return deck
+    .sort(randomSort)
+    .sort(randomSort)
+    .sort(randomSort)
+    .sort(randomSort)
+    .sort(randomSort)
+    .sort(randomSort);
+};
+
+export class GameEngine {
   constructor() {
     console.log("🍕Game");
+    // gameStateStore.subscribe(this.handleGameUpdate.bind(this));
     // gameStateStore
-    //   .pipe(select((state) => state.players))
+    //   .pipe(select(({ players }: GameState) => players))
     //   .subscribe(this.handlePlayers.bind(this));
   }
 
-  handlePlayers(players: Player) {
-    console.log("🍕>>> PLayers", players);
-  }
+  //   handleGameUpdate(gameState: GameState) {
+  //     console.log("🍓>>> players", JSON.stringify(gameState.players, null, 2));
+  //   }
+
+  //   handlePlayers(players: { [key: string]: Player }) {
+  //     console.log("🍕>>> players", JSON.stringify(players, null, 1));
+  //   }
 
   setupNewGame({ playerIds }: NewGameProps) {
-    //roll turns
-    playerIds.sort((a, b) => 0.5 - Math.random());
+    gameStateStore.update(
+      setProps(JSON.parse(JSON.stringify(gameStateDefaults)))
+    );
+    console.log("🍕>>> Setting new game");
 
-    //setup players
+    //roll deck
+    gameStateStore.update(setProp("deck", getNewDeck()));
+
+    //roll turns
+    playerIds.sort(randomSort);
+
+    //setup players and turns
     for (var playerId of playerIds) {
       this.addPlayer({ id: playerId, hand: [], knocked: false });
     }
   }
 
   addPlayer(player: Player) {
+    //add player to turns
     gameStateStore.update(
-      setProp("players", [...gameStateStore.getValue().players, player])
+      setProp("turns", [...gameStateStore.getValue().turns, player.id])
+    );
+    //add empty player
+    gameStateStore.update(
+      setProp("players", {
+        ...gameStateStore.getValue().players,
+        ...{ [player.id]: player },
+      })
     );
 
-    gameStateStore
-      .pipe(select((state) => state.players[0]))
-      .subscribe(this.handlePlayers.bind(this));
+    //deal cards
+    const currentDeck = gameStateStore.getValue().deck;
+    const hand: Card[] = [];
+    //deal 5 cards from the deck
+    for (let i = 0; i <= 4; i++) {
+      hand.push(currentDeck.pop() || emptyCard);
+    }
+    //deal hand
+    gameStateStore.update(
+      setProp("players", {
+        ...gameStateStore.getValue().players,
+        ...{ [player.id]: { ...player, hand } },
+      })
+    );
+    //update deck
+    gameStateStore.update(setProp("deck", currentDeck));
   }
 }
 
-export default GameEngine;
+//singleton
+const gameEngine = new GameEngine();
+
+export default gameEngine;
