@@ -33,7 +33,7 @@ export const appStateStore = createStore(
 );
 
 export const startCameraPosition = new Vector3(-0.5, -10, 100); // start high and at the correct rotation
-export const endCameraPosition = new Vector3(0.1, -5, 15);
+export const endCameraPosition = new Vector3(0.1, -2, 15);
 
 const App = () => {
   return (
@@ -56,12 +56,12 @@ const App = () => {
       >
         <color attach="background" args={["#EE8080"]} />
 
-        <ambientLight intensity={0.2} />
+        <ambientLight intensity={0.5} />
         <CameraController />
         <directionalLight
           position={[20, -10, 10]}
-          shadow-mapSize={[512, 512]}
-          shadow-bias={-0.0001}
+          shadow-mapSize={[128, 128]}
+          // shadow-bias={-0.0001}
           intensity={1}
           // color="red"
           castShadow
@@ -69,9 +69,10 @@ const App = () => {
           <orthographicCamera
             attach="shadow-camera"
             args={[-50, 50, -50, 50]}
+            // lookAt={() => new Vector3(0, 0, 0)}
           />
         </directionalLight>
-        <directionalLight
+        {/* <directionalLight
           position={[0, 0, 1]}
           shadow-mapSize={[512, 512]}
           // shadow-bias={-0.0001}
@@ -83,7 +84,7 @@ const App = () => {
             attach="shadow-camera"
             args={[-50, 50, -50, 50]}
           />
-        </directionalLight>
+        </directionalLight> */}
 
         <Physics gravity={[0, 0, 0]}>
           <Game />

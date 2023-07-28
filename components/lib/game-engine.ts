@@ -22,7 +22,7 @@ const getNewDeck = () => {
     CardType.Clubs,
     CardType.Diamonds,
   ]) {
-    for (let i = 0; i <= 12; i++) {
+    for (let i = 1; i <= 13; i++) {
       deck.push({
         type: cardType,
         value: i,
@@ -52,9 +52,9 @@ export class GameEngine {
   //     console.log("🍓>>> players", JSON.stringify(gameState.players, null, 2));
   //   }
 
-  //   handlePlayers(players: { [key: string]: Player }) {
-  //     console.log("🍕>>> players", JSON.stringify(players, null, 1));
-  //   }
+  // handlePlayers(players: { [key: string]: Player }) {
+  //   console.log("🍕>>> players", JSON.stringify(players, null, 1));
+  // }
 
   setupNewGame({ playerIds }: NewGameProps) {
     gameStateStore.update(

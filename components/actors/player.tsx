@@ -1,20 +1,30 @@
 import { useObservable } from "@ngneat/use-observable";
+import { animated } from "@react-spring/three";
 import { FC } from "react";
 import { Vector3 } from "three";
-import { Player, turns$ } from "../stores/game-state";
+import { Card as TypeCard, Player, turns$ } from "../stores/game-state";
 import Box from "./box";
+import Card from "./card";
 
 interface PlayerProps {
-  className?: string;
+  position: Vector3;
 }
 
 const Player: FC<PlayerProps & Player> = (props) => {
   const [turns] = useObservable(turns$);
   return (
-    <Box
-      color="rgb(255, 0, 0)"
-      position={new Vector3(10 * turns.indexOf(props.id), 10, 0)}
-    />
+    <animated.object3D position={props.position}>
+      <animated.object3D position={new Vector3(-4, 0, 0)}>
+        {props.hand.map((cardData: TypeCard, index: number) => (
+          <Card
+            key={`${cardData.type}-${cardData.value}-${Math.random()}`}
+            position={new Vector3(index * 3, -4, 0.5)}
+            {...cardData}
+          />
+        ))}
+      </animated.object3D>
+      <Box color="rgb(255, 0, 0)" />
+    </animated.object3D>
   );
 };
 

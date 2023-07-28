@@ -15,8 +15,12 @@ const Game: FC<GameProps> = ({ className }) => {
   const [players] = useObservable(players$);
   return (
     <>
-      {Object.keys(players).map((playerId) => (
-        <Player key={playerId} {...players[playerId]} />
+      {Object.keys(players).map((playerId, i) => (
+        <Player
+          position={new Vector3(15, i * 10, 0)}
+          key={playerId}
+          {...players[playerId]}
+        />
       ))}
       {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((i) => (
         <Box
