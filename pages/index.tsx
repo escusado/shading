@@ -16,7 +16,6 @@ if (typeof window !== "undefined") {
 export default function Home() {
   return (
     <div className="main">
-      {/* 2D and 3D apps */}
       <App />
 
       {/* bottom right link */}

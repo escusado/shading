@@ -21,12 +21,8 @@ const Floor = () => {
   return (
     <>
       <mesh
-        position={new Vector3(0, 0, 0)}
-        onPointerMove={(ev) =>
-          appStateStore.update(
-            setProp("floorPointerPosition", ev.intersections[0].point)
-          )
-        }
+        position={new Vector3(0, 0, -1)}
+        onPointerMove={(ev) => appStateStore.update(setProp("floorPointerPosition", ev.intersections[0].point))}
         receiveShadow={true}
       >
         <planeGeometry args={[floorSize.w, floorSize.h, 1, 1]} />

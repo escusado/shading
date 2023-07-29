@@ -51,6 +51,7 @@ export class GameEngine {
     playerIds.sort(randomSort);
 
     //setup players and turns
+    this.addPlayer({ id: "tarantula", hand: [], knocked: false });
     for (var playerId of playerIds) {
       this.addPlayer({ id: playerId, hand: [], knocked: false });
     }
