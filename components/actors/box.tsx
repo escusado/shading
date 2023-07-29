@@ -12,9 +12,7 @@ const Box: FC<BoxProps & MeshProps> = (props) => {
   const [xRate] = useState(randFloat(0.001, 0.02));
   const [yRate] = useState(randFloat(0.001, 0.02));
 
-  const meshRef = useRef<
-    Mesh<BufferGeometry, Material | Material[]> | undefined
-  >();
+  const meshRef = useRef<Mesh<BufferGeometry, Material | Material[]> | undefined>();
   useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.x += xRate;
@@ -30,9 +28,7 @@ const Box: FC<BoxProps & MeshProps> = (props) => {
       receiveShadow={true}
     >
       <boxGeometry args={[3, 3, 3]} />
-      <meshStandardMaterial
-        color={props.color ? new Color(props.color) : "orange"}
-      />
+      <meshStandardMaterial color={props.color ? new Color(props.color) : "orange"} />
 
       {/* <shaderMaterial
         fragmentShader={GradientFragmentShader}

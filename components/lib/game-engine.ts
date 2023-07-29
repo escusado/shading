@@ -1,12 +1,6 @@
 import { setProp, setProps } from "@ngneat/elf";
-import {
-  Card,
-  CardType,
-  emptyCard,
-  gameStateDefaults,
-  gameStateStore,
-  Player,
-} from "../stores/game-state";
+import { generateUUID } from "three/src/math/MathUtils";
+import { Card, CardType, emptyCard, gameStateDefaults, gameStateStore, Player } from "../stores/game-state";
 
 interface NewGameProps {
   playerIds: string[];
@@ -16,27 +10,17 @@ const randomSort = (_: any, __: any) => 0.5 - Math.random();
 const getNewDeck = () => {
   console.log("🍕>>> Rolling deck");
   const deck: Card[] = [];
-  for (let cardType of [
-    CardType.Spades,
-    CardType.Hearts,
-    CardType.Clubs,
-    CardType.Diamonds,
-  ]) {
+  for (let cardType of [CardType.Spades, CardType.Hearts, CardType.Clubs, CardType.Diamonds]) {
     for (let i = 1; i <= 13; i++) {
       deck.push({
+        id: generateUUID(),
         type: cardType,
         value: i,
         highlight: false,
       });
     }
   }
-  return deck
-    .sort(randomSort)
-    .sort(randomSort)
-    .sort(randomSort)
-    .sort(randomSort)
-    .sort(randomSort)
-    .sort(randomSort);
+  return deck.sort(randomSort).sort(randomSort).sort(randomSort).sort(randomSort).sort(randomSort).sort(randomSort);
 };
 
 export class GameEngine {
@@ -57,9 +41,7 @@ export class GameEngine {
   }
 
   setupNewGame({ playerIds }: NewGameProps) {
-    gameStateStore.update(
-      setProps(JSON.parse(JSON.stringify(gameStateDefaults)))
-    );
+    gameStateStore.update(setProps(JSON.parse(JSON.stringify(gameStateDefaults))));
     console.log("🍕>>> Setting new game");
 
     //roll deck
@@ -76,9 +58,7 @@ export class GameEngine {
 
   addPlayer(player: Player) {
     //add player to turns
-    gameStateStore.update(
-      setProp("turns", [...gameStateStore.getValue().turns, player.id])
-    );
+    gameStateStore.update(setProp("turns", [...gameStateStore.getValue().turns, player.id]));
     //add empty player
     gameStateStore.update(
       setProp("players", {
@@ -105,15 +85,7 @@ export class GameEngine {
     gameStateStore.update(setProp("deck", currentDeck));
   }
 
-  toggleHighlightCard({
-    playerId,
-    cardHandIndex,
-    value,
-  }: {
-    playerId: string;
-    cardHandIndex: number;
-    value: boolean;
-  }) {
+  toggleHighlightCard({ playerId, cardHandIndex, value }: { playerId: string; cardHandIndex: number; value: boolean }) {
     const hand = gameStateStore.getValue().players[playerId].hand;
     hand[cardHandIndex].highlight = value;
     gameStateStore.update(

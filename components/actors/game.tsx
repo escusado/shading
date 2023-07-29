@@ -16,15 +16,11 @@ const Game: FC<GameProps> = ({ className }) => {
   return (
     <>
       {Object.keys(players).map((playerId, i) => (
-        <Player
-          position={new Vector3(15, i * 10, 0)}
-          key={playerId}
-          {...players[playerId]}
-        />
+        <Player position={new Vector3(15, i * 10, 0)} key={"player-" + playerId} {...players[playerId]} />
       ))}
       {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((i) => (
         <Box
-          key={Math.random() + "box" + i}
+          key={"box-" + i}
           scale={randFloat(0.1, 1)}
           position={new Vector3(randFloat(-30, 30), randFloat(-10, 30), 0)}
         />

@@ -3,7 +3,7 @@
 
 import { Object3D, Vector3 } from "three";
 
-import { createStore, setProp, withProps } from "@ngneat/elf";
+import { createStore, select, setProp, withProps } from "@ngneat/elf";
 import { Canvas } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 
@@ -20,6 +20,7 @@ interface AppState {
   hasGameStarted: boolean;
   isGameCameraInFinalPosition: boolean;
   floorPointerPosition: Vector3;
+  isMousePointer: boolean;
 }
 
 export const appStateStore = createStore(
@@ -29,8 +30,13 @@ export const appStateStore = createStore(
     hasGameStarted: true,
     isAppInFocus: true,
     floorPointerPosition: new Vector3(0, 0, 0),
+    isMousePointer: false,
   })
 );
+
+appStateStore.pipe(select((state) => state.isMousePointer)).subscribe((isMousePointer) => {
+  document.body.style.cursor = isMousePointer ? "pointer" : "auto";
+});
 
 export const startCameraPosition = new Vector3(-0.5, -10, 100); // start high and at the correct rotation
 export const endCameraPosition = new Vector3(0.1, -2, 15);
@@ -41,9 +47,7 @@ const App = () => {
       <GameUi />
       <Canvas
         gl={{ antialias: false, powerPreference: "high-performance" }}
-        onMouseLeave={() =>
-          appStateStore.update(setProp("isAppInFocus", false))
-        }
+        onMouseLeave={() => appStateStore.update(setProp("isAppInFocus", false))}
         onMouseEnter={() => appStateStore.update(setProp("isAppInFocus", true))}
         shadows
         onCreated={(state) => (state.gl.localClippingEnabled = true)}

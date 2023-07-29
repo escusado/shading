@@ -17,8 +17,8 @@ const Player: FC<PlayerProps & Player> = ({ id, hand, position }) => {
         {hand.map((cardData: TypeCard, index: number) => {
           return (
             <Card
-              {...cardData}
-              key={`${cardData.type}-${cardData.value}-${Math.random()}`}
+              cardData={cardData}
+              key={`card-${cardData.id}-${cardData.type}-${cardData.value}}`}
               position={new Vector3(index * 3, -4, 0.5)}
               onClick={() => {
                 console.log("🍕>>> cardData.highlight", cardData.highlight);
