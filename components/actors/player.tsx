@@ -22,11 +22,15 @@ const Player: FC<PlayerProps & Player> = ({ id, hand, position }) => {
               position={new Vector3(index * 3, -4, 0.5)}
               onClick={() => {
                 console.log("🍕>>> cardData.highlight", cardData.highlight);
+                gameEngine.clearHighlightedCards({ isDealer: id === "dealer" });
                 gameEngine.toggleHighlightCard({
-                  playerId: id,
+                  isDealer: id === "dealer",
                   cardHandIndex: index,
-                  value: !cardData.highlight,
+                  value: true,
                 });
+                setTimeout(() => {
+                  gameEngine.trySwapCards();
+                }, 500);
               }}
             />
           );

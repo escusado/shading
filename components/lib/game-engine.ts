@@ -36,9 +36,9 @@ export class GameEngine {
   //     console.log("🍓>>> players", JSON.stringify(gameState.players, null, 2));
   //   }
 
-  handlePlayers(players: { [key: string]: Player }) {
-    console.log("🍕>>> players", JSON.stringify(players, null, 1));
-  }
+  // handlePlayers(players: { [key: string]: Player }) {
+  //   console.log("🍕>>> players", JSON.stringify(players, null, 1));
+  // }
 
   setupNewGame({ playerIds }: NewGameProps) {
     gameStateStore.update(setProps(JSON.parse(JSON.stringify(gameStateDefaults))));
@@ -51,7 +51,7 @@ export class GameEngine {
     playerIds.sort(randomSort);
 
     //setup players and turns
-    this.addPlayer({ id: "tarantula", hand: [], knocked: false });
+    playerIds.unshift("dealer");
     for (var playerId of playerIds) {
       this.addPlayer({ id: playerId, hand: [], knocked: false });
     }
@@ -86,9 +86,20 @@ export class GameEngine {
     gameStateStore.update(setProp("deck", currentDeck));
   }
 
-  toggleHighlightCard({ playerId, cardHandIndex, value }: { playerId: string; cardHandIndex: number; value: boolean }) {
+  toggleHighlightCard({
+    isDealer,
+    cardHandIndex,
+    value,
+  }: {
+    isDealer: boolean;
+    cardHandIndex: number;
+    value: boolean;
+  }) {
+    const playerId = isDealer ? "dealer" : gameStateStore.getValue().turns[gameStateStore.getValue().currentTurn];
     const hand = gameStateStore.getValue().players[playerId].hand;
     hand[cardHandIndex].highlight = value;
+
+    console.log("🍕>>> Toggling highlight card", JSON.stringify(hand[cardHandIndex]));
     gameStateStore.update(
       setProp("players", {
         ...gameStateStore.getValue().players,
@@ -97,6 +108,63 @@ export class GameEngine {
         },
       })
     );
+  }
+
+  clearHighlightedCards({ isDealer }: { isDealer: boolean }) {
+    const playerId = isDealer ? "dealer" : gameStateStore.getValue().turns[gameStateStore.getValue().currentTurn];
+    console.log(
+      "🍕>>> Clearing highlighted cards",
+      JSON.stringify(Object.keys(gameStateStore.getValue().players)),
+      playerId
+    );
+    const hand = gameStateStore.getValue().players[playerId].hand;
+    for (let card of hand) {
+      card.highlight = false;
+    }
+
+    gameStateStore.update(
+      setProp("players", {
+        ...gameStateStore.getValue().players,
+        ...{
+          [playerId]: { ...gameStateStore.getValue().players[playerId], hand },
+        },
+      })
+    );
+  }
+
+  trySwapCards() {
+    const playerId = gameStateStore.getValue().turns[gameStateStore.getValue().currentTurn];
+    const playerCard = gameStateStore.getValue().players[playerId].hand.find((card) => card.highlight);
+    const dealerCard = gameStateStore.getValue().players.dealer.hand.find((card) => card.highlight);
+    console.log("🍕>>> Trying to swap cards", JSON.stringify(playerCard), JSON.stringify(dealerCard));
+
+    if (playerCard && dealerCard) {
+      playerCard.highlight = false;
+      dealerCard.highlight = false;
+      const playerCardIndex = gameStateStore.getValue().players[playerId].hand.indexOf(playerCard);
+      const dealerCardIndex = gameStateStore.getValue().players.dealer.hand.indexOf(dealerCard);
+
+      const playerHand = gameStateStore.getValue().players[playerId].hand;
+      const dealerHand = gameStateStore.getValue().players.dealer.hand;
+
+      playerHand[playerCardIndex] = dealerCard;
+      dealerHand[dealerCardIndex] = playerCard;
+
+      gameStateStore.update(
+        setProps({
+          players: {
+            ...gameStateStore.getValue().players,
+            ...{
+              [playerId]: { ...gameStateStore.getValue().players[playerId], hand: playerHand },
+              dealer: { ...gameStateStore.getValue().players.dealer, hand: dealerHand },
+            },
+          },
+        })
+      );
+
+      // this.clearHighlightedCards({ playerId });
+      // this.clearHighlightedCards({ playerId: "dealer" });
+    }
   }
 }
 

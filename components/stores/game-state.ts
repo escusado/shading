@@ -38,7 +38,7 @@ export const emptyCard: Card = {
 export const gameStateDefaults = {
   players: {},
   turns: [],
-  currentTurn: 0,
+  currentTurn: 1,
   deck: [],
 };
 

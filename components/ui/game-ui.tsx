@@ -11,7 +11,7 @@ const GameUi: FC<GameUiProps> = () => {
         className="inline-block cursor-pointer rounded bg-red-300 p-2 px-4 text-white"
         onClick={() => {
           window.gameEngine.setupNewGame({
-            playerIds: ["uno", "dos", "tres"],
+            playerIds: ["naruto", "goku", "serena", "candy"],
           });
           console.log("🍕>>> start");
         }}

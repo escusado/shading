@@ -13,13 +13,14 @@ const Game: FC<GameProps> = ({ className }) => {
   const [players] = useObservable(players$);
   return (
     <>
-      {Object.keys(players).map((playerId, i) => (
-        <Player
-          position={playerId === "tarantula" ? new Vector3(-15, 5, 0) : new Vector3(15, i * 10, 0)}
-          key={"player-" + playerId}
-          {...players[playerId]}
-        />
-      ))}
+      {Object.keys(players).map((playerId, i) =>
+        playerId === "dealer" ? (
+          <Player position={new Vector3(-15, 10, 0)} key={"player-" + playerId} {...players[playerId]} />
+        ) : (
+          <Player position={new Vector3(15, i * 10 - 20, 0)} key={"player-" + playerId} {...players[playerId]} />
+        )
+      )}
+
       {/* {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((i) => (
         <Box
           key={"box-" + i}
