@@ -34,9 +34,11 @@ export const appStateStore = createStore(
   })
 );
 
-appStateStore.pipe(select((state) => state.isMousePointer)).subscribe((isMousePointer) => {
-  document.body.style.cursor = isMousePointer ? "pointer" : "auto";
-});
+if (typeof document !== "undefined") {
+  appStateStore.pipe(select((state) => state.isMousePointer)).subscribe((isMousePointer) => {
+    document.body.style.cursor = isMousePointer ? "pointer" : "auto";
+  });
+}
 
 export const startCameraPosition = new Vector3(-0.5, -10, 100); // start high and at the correct rotation
 export const endCameraPosition = new Vector3(0.1, -2, 15);
