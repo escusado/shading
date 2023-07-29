@@ -26,7 +26,7 @@ const getNewDeck = () => {
       deck.push({
         type: cardType,
         value: i,
-        hightlight: false,
+        highlight: false,
       });
     }
   }
@@ -52,9 +52,9 @@ export class GameEngine {
   //     console.log("🍓>>> players", JSON.stringify(gameState.players, null, 2));
   //   }
 
-  // handlePlayers(players: { [key: string]: Player }) {
-  //   console.log("🍕>>> players", JSON.stringify(players, null, 1));
-  // }
+  handlePlayers(players: { [key: string]: Player }) {
+    console.log("🍕>>> players", JSON.stringify(players, null, 1));
+  }
 
   setupNewGame({ playerIds }: NewGameProps) {
     gameStateStore.update(
@@ -103,6 +103,27 @@ export class GameEngine {
     );
     //update deck
     gameStateStore.update(setProp("deck", currentDeck));
+  }
+
+  toggleHighlightCard({
+    playerId,
+    cardHandIndex,
+    value,
+  }: {
+    playerId: string;
+    cardHandIndex: number;
+    value: boolean;
+  }) {
+    const hand = gameStateStore.getValue().players[playerId].hand;
+    hand[cardHandIndex].highlight = value;
+    gameStateStore.update(
+      setProp("players", {
+        ...gameStateStore.getValue().players,
+        ...{
+          [playerId]: { ...gameStateStore.getValue().players[playerId], hand },
+        },
+      })
+    );
   }
 }
 

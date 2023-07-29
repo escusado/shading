@@ -11,7 +11,7 @@ export enum CardType {
 export type Card = {
   type: CardType;
   value: number;
-  hightlight: boolean;
+  highlight: boolean;
 };
 
 export type Player = {
@@ -30,7 +30,7 @@ export interface GameState {
 export const emptyCard: Card = {
   type: CardType.Joker,
   value: 0,
-  hightlight: false,
+  highlight: false,
 };
 
 export const gameStateDefaults = {
