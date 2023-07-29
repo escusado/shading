@@ -10,6 +10,7 @@ import { Card as TypeCard } from "../stores/game-state";
 type CardProps = {
   onClick: () => void;
   cardData: TypeCard;
+  enabled: boolean;
 };
 
 const Card: FC<CardProps & Object3DProps> = (props) => {
@@ -44,9 +45,9 @@ const Card: FC<CardProps & Object3DProps> = (props) => {
       position={position}
     >
       <mesh
-        onPointerOver={() => appStateStore.update(setProp("isMousePointer", true))}
-        onPointerOut={() => appStateStore.update(setProp("isMousePointer", false))}
-        onClick={props.onClick}
+        onPointerOver={() => props.enabled && appStateStore.update(setProp("isMousePointer", true))}
+        onPointerOut={() => props.enabled && appStateStore.update(setProp("isMousePointer", false))}
+        onClick={() => props.enabled && props.onClick()}
         castShadow={true}
         receiveShadow={true}
       >
@@ -61,7 +62,7 @@ const Card: FC<CardProps & Object3DProps> = (props) => {
         <meshStandardMaterial
           attach="material-4"
           map={cardValueMap}
-          color={props.cardData.highlight ? new Color(0x00ff00) : new Color(0xffffff)}
+          color={props.cardData.highlight ? new Color(0xffff00) : new Color(0xffffff)}
         />
         <meshStandardMaterial attach="material-5" map={cardBackMap} />
       </mesh>

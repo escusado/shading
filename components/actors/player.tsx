@@ -8,20 +8,22 @@ import Card from "./card";
 
 interface PlayerProps {
   position: Vector3;
+  isPlayerTurn: boolean;
 }
 
-const Player: FC<PlayerProps & Player> = ({ id, hand, position }) => {
+const Player: FC<PlayerProps & Player> = ({ id, hand, position, isPlayerTurn }) => {
   return (
     <animated.object3D position={position}>
       <animated.object3D position={new Vector3(-4, 0, 0)}>
         {hand.map((cardData: TypeCard, index: number) => {
           return (
             <Card
+              enabled={isPlayerTurn || id === "dealer"}
               cardData={cardData}
-              key={`card-${cardData.id}-${cardData.type}-${cardData.value}}`}
+              key={`card-${id}-${cardData.id}-${cardData.type}-${cardData.value}}`}
               position={new Vector3(index * 3, -4, 0.5)}
               onClick={() => {
-                console.log("🍕>>> cardData.highlight", cardData.highlight);
+
                 gameEngine.clearHighlightedCards({ isDealer: id === "dealer" });
                 gameEngine.toggleHighlightCard({
                   isDealer: id === "dealer",
@@ -36,7 +38,7 @@ const Player: FC<PlayerProps & Player> = ({ id, hand, position }) => {
           );
         })}
       </animated.object3D>
-      <Box color="rgb(255, 0, 0)" />
+      <Box color={id === "dealer" ? "rgb(64,64,255)" : isPlayerTurn ? "rgb(128, 255, 128)" : "rgb(200, 200, 200)"} />
     </animated.object3D>
   );
 };

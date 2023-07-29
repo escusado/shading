@@ -50,3 +50,4 @@ export const gameStateStore = createStore(
 export const players$ = gameStateStore.pipe(select(({ players }: GameState) => players));
 
 export const turns$ = gameStateStore.pipe(select(({ turns }: GameState) => turns));
+export const currentTurn$ = gameStateStore.pipe(select(({ currentTurn }: GameState) => currentTurn));

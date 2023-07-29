@@ -99,7 +99,6 @@ export class GameEngine {
     const hand = gameStateStore.getValue().players[playerId].hand;
     hand[cardHandIndex].highlight = value;
 
-    console.log("🍕>>> Toggling highlight card", JSON.stringify(hand[cardHandIndex]));
     gameStateStore.update(
       setProp("players", {
         ...gameStateStore.getValue().players,
@@ -112,11 +111,7 @@ export class GameEngine {
 
   clearHighlightedCards({ isDealer }: { isDealer: boolean }) {
     const playerId = isDealer ? "dealer" : gameStateStore.getValue().turns[gameStateStore.getValue().currentTurn];
-    console.log(
-      "🍕>>> Clearing highlighted cards",
-      JSON.stringify(Object.keys(gameStateStore.getValue().players)),
-      playerId
-    );
+
     const hand = gameStateStore.getValue().players[playerId].hand;
     for (let card of hand) {
       card.highlight = false;
@@ -136,7 +131,6 @@ export class GameEngine {
     const playerId = gameStateStore.getValue().turns[gameStateStore.getValue().currentTurn];
     const playerCard = gameStateStore.getValue().players[playerId].hand.find((card) => card.highlight);
     const dealerCard = gameStateStore.getValue().players.dealer.hand.find((card) => card.highlight);
-    console.log("🍕>>> Trying to swap cards", JSON.stringify(playerCard), JSON.stringify(dealerCard));
 
     if (playerCard && dealerCard) {
       playerCard.highlight = false;
@@ -149,9 +143,13 @@ export class GameEngine {
 
       playerHand[playerCardIndex] = dealerCard;
       dealerHand[dealerCardIndex] = playerCard;
-
+      let newTurn = gameStateStore.getValue().currentTurn + 1;
+      if (newTurn >= gameStateStore.getValue().turns.length) {
+        newTurn = 1;
+      }
       gameStateStore.update(
         setProps({
+          currentTurn: newTurn,
           players: {
             ...gameStateStore.getValue().players,
             ...{
@@ -161,9 +159,6 @@ export class GameEngine {
           },
         })
       );
-
-      // this.clearHighlightedCards({ playerId });
-      // this.clearHighlightedCards({ playerId: "dealer" });
     }
   }
 }

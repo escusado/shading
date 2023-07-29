@@ -1,7 +1,7 @@
 import { useObservable } from "@ngneat/use-observable";
 import { FC } from "react";
 import { Vector3 } from "three";
-import { players$ } from "../stores/game-state";
+import { currentTurn$, players$, turns$ } from "../stores/game-state";
 import Player from "./player";
 import Stage from "./stage";
 
@@ -11,13 +11,25 @@ type GameProps = {
 
 const Game: FC<GameProps> = ({ className }) => {
   const [players] = useObservable(players$);
+  const [currentTurn] = useObservable(currentTurn$);
+  const [turns] = useObservable(turns$);
   return (
     <>
       {Object.keys(players).map((playerId, i) =>
         playerId === "dealer" ? (
-          <Player position={new Vector3(-15, 10, 0)} key={"player-" + playerId} {...players[playerId]} />
+          <Player
+            isPlayerTurn={turns[currentTurn] === playerId}
+            position={new Vector3(-15, 10, 0)}
+            key={"player-" + playerId}
+            {...players[playerId]}
+          />
         ) : (
-          <Player position={new Vector3(15, i * 10 - 20, 0)} key={"player-" + playerId} {...players[playerId]} />
+          <Player
+            isPlayerTurn={turns[currentTurn] === playerId}
+            position={new Vector3(15, i * 10 - 20, 0)}
+            key={"player-" + playerId}
+            {...players[playerId]}
+          />
         )
       )}
 
